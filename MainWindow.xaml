@@ -4,9 +4,36 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CryptoViewer"
+        xmlns:views="clr-namespace:CryptoViewer.Views"
+        xmlns:vms="clr-namespace:CryptoViewer.ViewModels"
+        xmlns:conv="clr-namespace:CryptoViewer.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <conv:CheckTypeConverter x:Key="CheckTypeConv"/>
+    </Window.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
+        <ListView Grid.Column="0">
+            <ListViewItem>Home</ListViewItem>
+            <ListViewItem>Conversion</ListViewItem>
+            <ListViewItem>Settings</ListViewItem>
+        </ListView>
+
+        <Grid Grid.Column="1">
+            <ContentControl Content="{Binding CurrentPage}"/>
+            <Grid.Resources>
+                <DataTemplate DataType="{x:Type vms:HomeViewModel}">
+                    <views:HomeView/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vms:SettingsViewModel}">
+                    <views:SettingsView/>
+                </DataTemplate>
+            </Grid.Resources>
+        </Grid>
     </Grid>
 </Window>
