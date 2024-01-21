@@ -3,4 +3,6 @@
 public interface IExpirable
 {
     DateTime ExpirationDate { get; }
+
+    bool IsExpired();
 }
