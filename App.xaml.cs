@@ -18,17 +18,18 @@ public partial class App : Application
         _host = Host.CreateDefaultBuilder()
             .ConfigureServices((hostBuilder, services) =>
             {
+                services.AddSingleton<Func<Type, IPageViewModel>>(s => vmType => (IPageViewModel)s.GetRequiredService(vmType));
+
+                services.AddSingleton<INavigationService, NavigationService>();
+
+                services.AddSingleton<MainViewModel>();
+                services.AddSingleton<HomeViewModel>();
+                services.AddSingleton<SettingsViewModel>();
+
                 services.AddSingleton(s => new MainWindow()
                 {
                     DataContext = s.GetRequiredService<MainViewModel>()
                 });
-
-                services.AddSingleton<MainViewModel>();
-                services.AddSingleton<HomeViewModel>();
-
-                services.AddSingleton<Func<Type, IPageViewModel>>(s => vmType => (IPageViewModel)s.GetRequiredService(vmType));
-
-                services.AddSingleton<INavigationService, NavigationService>();
             })
             .Build();
     }

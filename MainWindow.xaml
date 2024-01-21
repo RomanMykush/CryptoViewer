@@ -19,9 +19,28 @@
         </Grid.ColumnDefinitions>
 
         <ListView Grid.Column="0">
-            <ListViewItem>Home</ListViewItem>
-            <ListViewItem>Conversion</ListViewItem>
-            <ListViewItem>Settings</ListViewItem>
+            <ListViewItem HorizontalContentAlignment="Stretch" Padding="0"
+                          IsSelected="{Binding CurrentPage, Converter={StaticResource CheckTypeConv}, ConverterParameter={x:Type vms:HomeViewModel}, Mode=OneWay}">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <Image VerticalAlignment="Center" Source="Resources\black_home_icon.png"/>
+                        <Border Width="5"/>
+                        <TextBlock VerticalAlignment="Center" Text="Home"/>
+                    </StackPanel>
+                    <Button Opacity="0" Command="{Binding NavigateToCommand}" CommandParameter="{x:Type vms:HomeViewModel}"/>
+                </Grid>
+            </ListViewItem>
+            <ListViewItem HorizontalContentAlignment="Stretch" Padding="0"
+                          IsSelected="{Binding CurrentPage, Converter={StaticResource CheckTypeConv}, ConverterParameter={x:Type vms:SettingsViewModel}, Mode=OneWay}">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <Image VerticalAlignment="Center" Source="Resources\black_gear_icon.png"/>
+                        <Border Width="5"/>
+                        <TextBlock VerticalAlignment="Center" Text="Settings"/>
+                    </StackPanel>
+                    <Button Opacity="0" Command="{Binding NavigateToCommand}" CommandParameter="{x:Type vms:SettingsViewModel}"/>
+                </Grid>
+            </ListViewItem>
         </ListView>
 
         <Grid Grid.Column="1">

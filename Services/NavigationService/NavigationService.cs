@@ -12,7 +12,7 @@ public class NavigationService : INavigationService
         private set
         {
             _currentPage = value;
-            StrongReferenceMessenger.Default.Send(_currentPage);
+            WeakReferenceMessenger.Default.Send(new PageChangeMessage(_currentPage));
         }
     }
 
