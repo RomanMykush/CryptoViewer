@@ -20,7 +20,8 @@
 
         <TextBox Grid.Row="0" Grid.Column="1" />
 
-        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+        <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                  Background="Transparent">
             
         </DataGrid>
     </Grid>

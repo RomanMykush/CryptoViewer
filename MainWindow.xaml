@@ -7,52 +7,122 @@
         xmlns:views="clr-namespace:CryptoViewer.Views"
         xmlns:vms="clr-namespace:CryptoViewer.ViewModels"
         xmlns:conv="clr-namespace:CryptoViewer.Converters"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True">
     <Window.Resources>
         <conv:CheckTypeConverter x:Key="CheckTypeConv"/>
     </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
+    <Border Background="{StaticResource primaryBackColor}"
+            CornerRadius="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <!--Navigation menu-->
+                <RowDefinition Height="20"/>
+                <!--Content section-->
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <Grid.ColumnDefinitions>
+                <!--Navigation menu-->
+                <ColumnDefinition Width="250"/>
+                <!--Content section-->
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <ListView Grid.Column="0">
-            <ListViewItem HorizontalContentAlignment="Stretch" Padding="0"
-                          IsSelected="{Binding CurrentPage, Converter={StaticResource CheckTypeConv}, ConverterParameter={x:Type vms:HomeViewModel}, Mode=OneWay}">
-                <Grid>
-                    <StackPanel Orientation="Horizontal" Margin="2">
-                        <Image VerticalAlignment="Center" Source="Resources\black_home_icon.png"/>
-                        <Border Width="5"/>
-                        <TextBlock VerticalAlignment="Center" Text="Home"/>
-                    </StackPanel>
-                    <Button Opacity="0" Command="{Binding NavigateToCommand}" CommandParameter="{x:Type vms:HomeViewModel}"/>
-                </Grid>
-            </ListViewItem>
-            <ListViewItem HorizontalContentAlignment="Stretch" Padding="0"
-                          IsSelected="{Binding CurrentPage, Converter={StaticResource CheckTypeConv}, ConverterParameter={x:Type vms:SettingsViewModel}, Mode=OneWay}">
-                <Grid>
-                    <StackPanel Orientation="Horizontal" Margin="2">
-                        <Image VerticalAlignment="Center" Source="Resources\black_gear_icon.png"/>
-                        <Border Width="5"/>
-                        <TextBlock VerticalAlignment="Center" Text="Settings"/>
-                    </StackPanel>
-                    <Button Opacity="0" Command="{Binding NavigateToCommand}" CommandParameter="{x:Type vms:SettingsViewModel}"/>
-                </Grid>
-            </ListViewItem>
-        </ListView>
+            <!--Control bar-->
+            <Border x:Name="pnlControlBar"
+                    Background="{StaticResource titleBarColor}"
+                    CornerRadius="10,10,0,0"
+                    Grid.Row="0" Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    MouseLeftButtonDown="pnlControlBar_MouseLeftButtonDown">
+                <StackPanel Orientation="Horizontal"
+                            FlowDirection="RightToLeft"
+                            MouseEnter="pnlControlBar_MouseEnter">
+                    <Button x:Name="btnClose"
+                            Margin="5,0,0,0"
+                            Style="{StaticResource controlButton}"
+                            Tag="{StaticResource color4}"
+                            Click="btnClose_Click">
+                        <fa:ImageAwesome Icon="Times" Style="{StaticResource controlButtonIcon}"/>
+                    </Button>
+                    <Button x:Name="btnMaximize"
+                            Style="{StaticResource controlButton}"
+                            Tag="{StaticResource textColor2}"
+                            Click="btnMaximize_Click">
+                        <fa:ImageAwesome Icon="SquareOutline" Style="{StaticResource controlButtonIcon}"/>
+                    </Button>
+                    <Button x:Name="btnMinimize"
+                            Style="{StaticResource controlButton}"
+                            Tag="{StaticResource textColor2}"
+                            Click="btnMinimize_Click">
+                        <fa:ImageAwesome Icon="WindowMinimize" Width="12" Style="{StaticResource controlButtonIcon}"/>
+                    </Button>
+                </StackPanel>
+            </Border>
 
-        <Grid Grid.Column="1">
-            <ContentControl Content="{Binding CurrentPage}"/>
-            <Grid.Resources>
-                <DataTemplate DataType="{x:Type vms:HomeViewModel}">
-                    <views:HomeView/>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type vms:SettingsViewModel}">
-                    <views:SettingsView/>
-                </DataTemplate>
-            </Grid.Resources>
+            <!--Navigation Menu-->
+            <Border Grid.Row="1" Grid.Column="0" CornerRadius="0,0,0,10"
+                    Background="{StaticResource secondaryBackColor}">
+                <StackPanel>
+                    <!--Logo-->
+                    <StackPanel Orientation="Horizontal"
+                                Height="35"
+                                Margin="20,15,0,20">
+
+                        <fa:ImageAwesome Icon="Eye" Height="25"
+                                         Foreground="{StaticResource textColor1}"/>
+                        <TextBlock Text="CryptoViewer"
+                                   Foreground="{StaticResource textColor1}"
+                                   FontSize="20"
+                                   FontFamily="Montserrat"
+                                   FontWeight="Medium"
+                                   VerticalAlignment="Center"
+                                   Margin="15,0,0,0"/>
+                    </StackPanel>
+
+                    <!--Menu Buttons-->
+                    <RadioButton Style="{StaticResource menuButton}"
+                                 Tag="{StaticResource color1}"
+                                 IsChecked="{Binding CurrentPage, Converter={StaticResource CheckTypeConv},
+                                     ConverterParameter={x:Type vms:HomeViewModel}, Mode=OneWay}"
+                                 Command="{Binding NavigateToCommand}"
+                                 CommandParameter="{x:Type vms:HomeViewModel}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:ImageAwesome Icon="Home" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Home" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource menuButton}"
+                                 Tag="{StaticResource color2}"
+                                 IsChecked="{Binding CurrentPage, Converter={StaticResource CheckTypeConv},
+                                     ConverterParameter={x:Type vms:SettingsViewModel}, Mode=OneWay}"
+                                 Command="{Binding NavigateToCommand}" CommandParameter="{x:Type vms:SettingsViewModel}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:ImageAwesome Icon="Gear" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Settings" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+            </Border>
+
+            <!--Main Section-->
+            <Grid Grid.Row="1" Grid.Column="1" Margin="25">
+                <ContentControl Content="{Binding CurrentPage}"/>
+                <Grid.Resources>
+                    <DataTemplate DataType="{x:Type vms:HomeViewModel}">
+                        <views:HomeView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vms:SettingsViewModel}">
+                        <views:SettingsView/>
+                    </DataTemplate>
+                </Grid.Resources>
+            </Grid>
         </Grid>
-    </Grid>
+    </Border>
 </Window>
