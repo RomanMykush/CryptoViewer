@@ -1,5 +1,6 @@
 ﻿using CryptoViewer.Dtos;
 using CryptoViewer.Models;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
@@ -9,15 +10,14 @@ namespace CryptoViewer.Services.CoinProvider;
 public class CoinProvider : ICoinProvider
 {
     public readonly HttpClient _httpClient;
-    const string ApiPath = "https://api.coingecko.com/api/v3/";
 
-    public CoinProvider(HttpClient httpClient)
+    public CoinProvider(HttpClient httpClient, IOptions<ApplicationOptions> appOptions)
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri(ApiPath);
+        _httpClient.BaseAddress = new Uri(appOptions.Value.ApiPath);
     }
 
-    public async Task<ICollection<SimpleCoinDto>> SearchCoin(string query)
+    public async Task<IEnumerable<SimpleCoinDto>> SearchCoin(string query)
     {
         var response = await _httpClient.GetAsync($"search?query={query}");
         var jsonRes = await response.Content.ReadAsStringAsync();
@@ -35,7 +35,7 @@ public class CoinProvider : ICoinProvider
         return result;
     }
 
-    public async Task<ICollection<CoinDto>> GetCoins(string referenceCurrency, ICollection<string>? ids = null)
+    public async Task<IEnumerable<CoinDto>> GetCoins(string referenceCurrency, ICollection<string>? ids = null)
     {
         string requestQuery;
         if (ids != null)
@@ -58,19 +58,6 @@ public class CoinProvider : ICoinProvider
 
         for (int i = 0; i < result.Length; i++)
             result[i].PriceChange = priceChanges![i];
-
-        return result;
-    }
-
-    public async Task<ICollection<string>> GetReferenceCurrencies()
-    {
-        var response = await _httpClient.GetAsync("simple/supported_vs_currencies");
-        var jsonRes = await response.Content.ReadAsStringAsync();
-
-        var result = JsonConvert.DeserializeObject<string[]>(jsonRes);
-
-        if (result == null)
-            return new List<string>();
 
         return result;
     }

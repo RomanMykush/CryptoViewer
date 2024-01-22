@@ -1,11 +1,13 @@
-﻿using CryptoViewer.Dtos;
-using CryptoViewer.Services.CoinProvider;
+﻿using CryptoViewer.Services.CoinProvider;
+using CryptoViewer.Services.CoinService;
 using CryptoViewer.Services.NavigationService;
-using CryptoViewer.Stores;
+using CryptoViewer.Services.ReferenceCurrencyProvider;
+using CryptoViewer.Stores.CoinStore;
+using CryptoViewer.Stores.ReferenceCurrencyStore;
 using CryptoViewer.ViewModels;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Windows;
 
@@ -22,26 +24,35 @@ public partial class App : Application
     {
         _host = Host.CreateDefaultBuilder()
 
-            .ConfigureServices((hostBuilder, services) =>
+            .ConfigureServices((builder, services) =>
             {
+                services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+                services.Configure<ApplicationOptions>(
+                    builder.Configuration.GetSection(nameof(ApplicationOptions)));
+
                 services.AddSingleton<Func<Type, IPageViewModel>>(s => vmType => (IPageViewModel)s.GetRequiredService(vmType));
 
-                string? userAgent = hostBuilder.Configuration.GetValue<string>("UserAgent");
                 services.AddScoped(s =>
                 {
                     var httpClient = new HttpClient(new SocketsHttpHandler()
                     {
                         PooledConnectionLifetime = TimeSpan.FromMinutes(1)
                     });
-                    if (userAgent != null)
+
+                    var options = s.GetRequiredService<IOptions<ApplicationOptions>>();
+                    var userAgent = options.Value.UserAgent;
+                    if (!string.IsNullOrEmpty(userAgent))
                         httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
 
                     return httpClient;
                 });
 
                 services.AddSingleton<INavigationService, NavigationService>();
+                services.AddSingleton<IReferenceCurrencyProvider, ReferenceCurrencyProvider>();
+                services.AddSingleton<ReferenceCurrencyStore>();
                 services.AddSingleton<ICoinProvider, CoinProvider>();
                 services.AddSingleton<CoinStore>();
+                services.AddScoped<ICoinService, CoinService>();
 
                 services.AddSingleton<MainViewModel>();
                 services.AddScoped<HomeViewModel>();

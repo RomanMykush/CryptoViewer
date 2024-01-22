@@ -16,9 +16,9 @@ public class Coin : IExpirable
     public float? MarketCap => Price * CirculatingSupply;
 
     public DateTime ExpirationDate { get; }
-    public Coin(TimeSpan lifeSpan)
+    public Coin()
     {
-        ExpirationDate = DateTime.UtcNow + lifeSpan;
+        ExpirationDate = DateTime.UtcNow + TimeSpan.FromMinutes(1);
     }
 
     public bool IsExpired()
@@ -28,6 +28,6 @@ public class Coin : IExpirable
         return false;
     }
 
-    public bool ContainsSimpleData() => Price == null || Volume == null ||
+    public bool IsIncomplete() => Price == null || Volume == null ||
         CirculatingSupply == null || PriceChange == null;
 }
