@@ -2,20 +2,23 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CryptoViewer.Services.NavigationService;
-using System.Windows;
+using CryptoViewer.Stores.NavigationStore;
 
 namespace CryptoViewer.ViewModels;
 
 public partial class MainViewModel : ObservableRecipient, IRecipient<PageChangeMessage>
 {
     private readonly INavigationService _navigationService;
-    public IPageViewModel CurrentPage => _navigationService.CurrentPage;
+    private readonly NavigationStore _navigationStore;
+    public IPageViewModel? CurrentPage => _navigationStore.CurrentPage;
 
-    public MainViewModel(INavigationService navigationService)
+    public MainViewModel(INavigationService navigationService, NavigationStore navigationStore)
     {
         _navigationService = navigationService;
+        _navigationStore = navigationStore;
 
         IsActive = true;
+        _navigationService.NavigateTo<HomeViewModel>();
     }
 
     [RelayCommand]
@@ -26,7 +29,8 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<PageChangeM
 
         var mi = typeof(INavigationService).GetMethod(nameof(NavigateTo));
         var metRef = mi!.MakeGenericMethod(vmType);
-        metRef.Invoke(_navigationService, null);
+        object?[] parametersArray = [new object?[] { null }];
+        metRef.Invoke(_navigationService, parametersArray);
     }
 
     public void Receive(PageChangeMessage message)

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using CryptoViewer.Stores.NavigationStore;
 using CryptoViewer.ViewModels;
 using System.Windows;
 
@@ -6,32 +7,17 @@ namespace CryptoViewer.Services.NavigationService;
 
 public class NavigationService : INavigationService
 {
-    public IPageViewModel _currentPage;
-    public IPageViewModel CurrentPage
+    private readonly NavigationStore _navigationStore;
+    private readonly Func<Type, object?, IPageViewModel> _viewModelFactory;
+
+    public NavigationService(NavigationStore navigationStore, Func<Type, object?, IPageViewModel> viewModelFactory)
     {
-        get => _currentPage;
-        private set
-        {
-            if (_currentPage != null)
-                _currentPage.IsActive = false;
-
-            _currentPage = value;
-            _currentPage.IsActive = true;
-
-            WeakReferenceMessenger.Default.Send(new PageChangeMessage(_currentPage));
-        }
-    }
-
-    private readonly Func<Type, IPageViewModel> _viewModelFactory;
-
-    public NavigationService(Func<Type, IPageViewModel> viewModelFactory)
-    {
+        _navigationStore = navigationStore;
         _viewModelFactory = viewModelFactory;
-        _currentPage = _viewModelFactory.Invoke(typeof(HomeViewModel));
     }
 
-    public void NavigateTo<T>() where T : IPageViewModel
+    public void NavigateTo<T>(object? state) where T : IPageViewModel
     {
-        CurrentPage = _viewModelFactory.Invoke(typeof(T));
+        _navigationStore.CurrentPage = _viewModelFactory.Invoke(typeof(T), state);
     }
 }

@@ -3,6 +3,7 @@ using CryptoViewer.Services.CoinService;
 using CryptoViewer.Services.NavigationService;
 using CryptoViewer.Services.ReferenceCurrencyProvider;
 using CryptoViewer.Stores.CoinStore;
+using CryptoViewer.Stores.NavigationStore;
 using CryptoViewer.Stores.ReferenceCurrencyStore;
 using CryptoViewer.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +31,15 @@ public partial class App : Application
                 services.Configure<ApplicationOptions>(
                     builder.Configuration.GetSection(nameof(ApplicationOptions)));
 
-                services.AddSingleton<Func<Type, IPageViewModel>>(s => vmType => (IPageViewModel)s.GetRequiredService(vmType));
+                services.AddSingleton<Func<Type, object?, IPageViewModel>>(s => (vmType, state) =>
+                {
+                    var page = (IPageViewModel)s.GetRequiredService(vmType);
+
+                    if (page is CoinDetailsViewModel vm && state is string id)
+                        vm.CoinId = id;
+
+                    return page;
+                });
 
                 services.AddScoped(s =>
                 {
@@ -47,7 +56,8 @@ public partial class App : Application
                     return httpClient;
                 });
 
-                services.AddSingleton<INavigationService, NavigationService>();
+                services.AddSingleton<NavigationStore>();
+                services.AddScoped<INavigationService, NavigationService>();
                 services.AddSingleton<IReferenceCurrencyProvider, ReferenceCurrencyProvider>();
                 services.AddSingleton<ReferenceCurrencyStore>();
                 services.AddSingleton<ICoinProvider, CoinProvider>();
@@ -55,6 +65,7 @@ public partial class App : Application
                 services.AddScoped<ICoinService, CoinService>();
 
                 services.AddSingleton<MainViewModel>();
+                services.AddScoped<CoinDetailsViewModel>();
                 services.AddScoped<HomeViewModel>();
                 services.AddScoped<SettingsViewModel>();
 

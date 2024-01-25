@@ -4,6 +4,5 @@ namespace CryptoViewer.Services.NavigationService;
 
 public interface INavigationService
 {
-    IPageViewModel CurrentPage { get; }
-    void NavigateTo<T>() where T : IPageViewModel;
+    void NavigateTo<T>(object? state = null) where T : IPageViewModel;
 }
