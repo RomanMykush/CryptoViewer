@@ -3,11 +3,11 @@
 namespace CryptoViewer.Views;
 
 /// <summary>
-/// Interaction logic for SettingsView.xaml
+/// Interaction logic for CoinDetailsView.xaml
 /// </summary>
-public partial class SettingsView : UserControl
+public partial class CoinDetailsView : UserControl
 {
-    public SettingsView()
+    public CoinDetailsView()
     {
         InitializeComponent();
     }

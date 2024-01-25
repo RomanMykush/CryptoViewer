@@ -4,8 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CryptoViewer.Views"
+             xmlns:conv="clr-namespace:CryptoViewer.Converters"
+             xmlns:utils="clr-namespace:CryptoViewer.Utils"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="600">
+    
+    <UserControl.Resources>
+        <conv:ValueConverterGroup x:Key="CompareAndVisibilitate">
+            <conv:DataStateCompareConverter/>
+            <BooleanToVisibilityConverter/>
+        </conv:ValueConverterGroup>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -16,13 +27,86 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <ComboBox Grid.Row="0" Grid.Column="0" />
+        <ComboBox Grid.Row="0" Grid.Column="0" SelectedIndex="0"
+                  Margin="0,0,15,15" ItemsSource="{Binding ReferenceCurrencies.AsObservable}"
+                  SelectedItem="{Binding SelectedRefCurrency}"
+                  Style="{StaticResource fancyComboBox}"/>
 
-        <TextBox Grid.Row="0" Grid.Column="1" />
+        <Grid Grid.Row="0" Grid.Column="1" Margin="0,0,0,15">
+            <TextBox x:Name="SearchTermTextBox" Style="{StaticResource searchTextBox}"
+                     Text="{Binding SearchQuery}" KeyUp="ComboBox_KeyUp"/>
+            <TextBlock IsHitTestVisible="False" Text="Search for ..."
+                       VerticalAlignment="Center" HorizontalAlignment="Left"
+                       Margin="10,0,0,0" Foreground="{StaticResource textColor2}"
+                       FontSize="{StaticResource headerFontSize3}">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text, ElementName=SearchTermTextBox}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+
+        <fa:ImageAwesome Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                         Visibility="{Binding CurrentDataState,
+                             Converter={StaticResource CompareAndVisibilitate},
+                             ConverterParameter={x:Static utils:DataState.Loading}}"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Icon="CircleOutlineNotch" Spin="True"
+                         Height="60" Foreground="{StaticResource textColor1}"/>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                    Visibility="{Binding CurrentDataState,
+                        Converter={StaticResource CompareAndVisibilitate},
+                        ConverterParameter={x:Static utils:DataState.Failed}}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+            <fa:ImageAwesome Icon="Times" Height="40"
+                             Foreground="{StaticResource color4}"/>
+            <TextBlock Text="Failed to load data" Margin="0,5,0,0"
+                       FontSize="{StaticResource headerFontSize3}"/>
+        </StackPanel>
 
         <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                  Background="Transparent">
+                  Visibility="{Binding CurrentDataState,
+                      Converter={StaticResource CompareAndVisibilitate},
+                      ConverterParameter={x:Static utils:DataState.Available}}"
+                  Style="{StaticResource transperentDataGrid}"
+                  ItemsSource="{Binding Coins.AsObservable}" Name="CoinDataGrid">
             
+            <DataGrid.CellStyle>
+                <Style BasedOn="{StaticResource transperentDataGridCell}" TargetType="{x:Type DataGridCell}"/>
+            </DataGrid.CellStyle>
+
+            <DataGrid.RowStyle>
+                <Style BasedOn="{StaticResource responsiveDataGridRow}" TargetType="{x:Type DataGridRow}">
+                    <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                </Style>
+            </DataGrid.RowStyle>
+
+            <DataGrid.Columns>
+                <DataGridTemplateColumn IsReadOnly="True" Width="auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding ImageUri}" Height="40"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Name" IsReadOnly="True" Width="*" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Price" IsReadOnly="True" Width="*" Binding="{Binding Price}"/>
+                <DataGridTextColumn Header="Volume" IsReadOnly="True" Width="*" Binding="{Binding Volume}"/>
+                <DataGridTextColumn Header="Market cap" IsReadOnly="True" Width="*" Binding="{Binding MarketCap}"/>
+                
+                <DataGridTextColumn Header="Today" IsReadOnly="True" Width="*" Binding="{Binding TodayPriceChange}"/>
+                <DataGridTextColumn Header="Week" IsReadOnly="True" Width="*" Binding="{Binding InWeekPriceChange}"/>
+                <DataGridTextColumn Header="Month" IsReadOnly="True" Width="*" Binding="{Binding InMonthPriceChange}"/>
+                <DataGridTextColumn Header="Year" IsReadOnly="True" Width="*" Binding="{Binding InYearPriceChange}"/>
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </UserControl>

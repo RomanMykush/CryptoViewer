@@ -13,7 +13,8 @@
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         Background="Transparent"
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        FontFamily="{StaticResource defaultFontFamily}">
     <Window.Resources>
         <conv:CheckTypeConverter x:Key="CheckTypeConv"/>
     </Window.Resources>
@@ -79,7 +80,7 @@
                                          Foreground="{StaticResource textColor1}"/>
                         <TextBlock Text="CryptoViewer"
                                    Foreground="{StaticResource textColor1}"
-                                   FontSize="20"
+                                   FontSize="{StaticResource headerFontSize2}"
                                    FontFamily="Montserrat"
                                    FontWeight="Medium"
                                    VerticalAlignment="Center"
@@ -120,6 +121,9 @@
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vms:SettingsViewModel}">
                         <views:SettingsView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vms:CoinDetailsViewModel}">
+                        <views:CoinDetailsView/>
                     </DataTemplate>
                 </Grid.Resources>
             </Grid>

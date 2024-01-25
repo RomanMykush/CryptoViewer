@@ -2,9 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:fa="http://schemas.fontawesome.io/icons/">
     
-    <!--Menu button-->
+    <!-- Menu button -->
     <Style x:Key="menuButton" TargetType="RadioButton">
-        <!--Normal button style-->
+        <!-- Normal button style -->
         <Setter Property="Height" Value="50"/>
         <Setter Property="Margin" Value="-5,0,0,5"/>
         <Setter Property="Background" Value="Transparent"/>
@@ -22,14 +22,14 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <!--Button Style on hover-->
+            <!-- Button Style on hover -->
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Margin" Value="0,0,0,5"/>
                 <Setter Property="Background" Value="{StaticResource panelOverColor}"/>
                 <Setter Property="Foreground" Value="{StaticResource textColor1}"/>
                 <Setter Property="BorderBrush" Value="{Binding Path=Tag, RelativeSource={RelativeSource Self}}"/>
             </Trigger>
-            <!--Activated button style-->
+            <!-- Activated button style -->
             <Trigger Property="IsChecked" Value="True">
                 <Setter Property="Margin" Value="0,0,0,5"/>
                 <Setter Property="Background" Value="{StaticResource panelActiveColor}"/>
@@ -39,7 +39,7 @@
         </Style.Triggers>
     </Style>
 
-    <!--Menu button icon-->
+    <!-- Menu button icon -->
     <Style x:Key="menuButtonIcon" TargetType="fa:ImageAwesome">
         <Setter Property="Foreground" Value="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
         <Setter Property="Width" Value="22"/>
@@ -47,19 +47,19 @@
         <Setter Property="Margin" Value="30,0,15,0"/>
     </Style>
 
-    <!--Menu button text-->
+    <!-- Menu button text -->
     <Style x:Key="menuButtonText" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
-        <Setter Property="FontFamily" Value="Montserrat"/>
+        <Setter Property="FontFamily" Value="{StaticResource defaultFontFamily}"/>
         <Setter Property="FontWeight" Value="Medium"/>
-        <Setter Property="FontSize" Value="13.5"/>
+        <Setter Property="FontSize" Value="{StaticResource headerFontSize4}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
 
-    <!--Control bar button-->
+    <!-- Control bar button -->
     <Style x:Key="controlButton" TargetType="Button">
-        <!--Normal button style-->
+        <!-- Normal button style -->
         <Setter Property="Width" Value="35"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{StaticResource textColor2}"/>
@@ -74,7 +74,7 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <!--Button Style on hover-->
+            <!-- Button Style on hover -->
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource panelActiveColor}"/>
                 <Setter Property="Foreground" Value="{Binding Path=Tag, RelativeSource={RelativeSource Self}}"/>
@@ -82,7 +82,7 @@
         </Style.Triggers>
     </Style>
     
-    <!--Menu button icon-->
+    <!-- Menu button icon -->
     <Style x:Key="controlButtonIcon" TargetType="fa:ImageAwesome">
         <Setter Property="Foreground" Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
         <Setter Property="Width" Value="9"/>

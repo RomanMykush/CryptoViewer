@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <!-- Common font properties -->
+    <FontFamily x:Key="defaultFontFamily"></FontFamily>
+    <!-- Header font -->
+    <sys:Double x:Key="headerFontSize1">26</sys:Double>
+    <sys:Double x:Key="headerFontSize2">20</sys:Double>
+    <sys:Double x:Key="headerFontSize3">16.5</sys:Double>
+    <sys:Double x:Key="headerFontSize4">13.5</sys:Double>
+
+</ResourceDictionary>

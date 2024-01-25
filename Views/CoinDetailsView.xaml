@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="CryptoViewer.Views.CoinDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CryptoViewer.Views"
+             xmlns:conv="clr-namespace:CryptoViewer.Converters"
+             xmlns:utils="clr-namespace:CryptoViewer.Utils"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <conv:ValueConverterGroup x:Key="CompareAndVisibilitate">
+            <conv:DataStateCompareConverter/>
+            <BooleanToVisibilityConverter/>
+        </conv:ValueConverterGroup>
+    </UserControl.Resources>
+
+    <Grid>
+
+        <fa:ImageAwesome Visibility="{Binding CurrentDataState,
+                             Converter={StaticResource CompareAndVisibilitate},
+                             ConverterParameter={x:Static utils:DataState.Loading}}"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Icon="CircleOutlineNotch" Spin="True"
+                         Height="60" Foreground="{StaticResource textColor1}"/>
+
+        <StackPanel Visibility="{Binding CurrentDataState,
+                        Converter={StaticResource CompareAndVisibilitate},
+                        ConverterParameter={x:Static utils:DataState.Failed}}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+            <fa:ImageAwesome Icon="Times" Height="40"
+                             Foreground="{StaticResource color4}"/>
+            <TextBlock Text="Failed to load data" Margin="0,5,0,0"
+                       FontSize="{StaticResource headerFontSize3}"/>
+        </StackPanel>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <Image Source="{Binding ImageUri}"/>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}"
+                                   FontSize="{StaticResource headerFontSize2}"/>
+                        <TextBlock Text="{Binding Symbol}" Margin="10,0,0,0"
+                                   FontSize="{StaticResource headerFontSize3}"
+                                   Foreground="{StaticResource textColor2}"/>
+                    </StackPanel>
+
+                    <TextBlock Text="{Binding Price}"
+                               FontSize="{StaticResource headerFontSize2}"/>
+
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

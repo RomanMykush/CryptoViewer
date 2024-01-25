@@ -3,15 +3,11 @@ using System.Windows.Data;
 
 namespace CryptoViewer.Converters;
 
-public class CheckTypeConverter : IValueConverter
+public class ValueConverterGroup : List<IValueConverter>, IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        Type? expectedType = parameter as Type;
-        if (expectedType == null)
-            return false;
-
-        return value != null && value.GetType() == expectedType;
+        return this.Aggregate(value, (current, converter) => converter.Convert(current, targetType, parameter, culture));
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

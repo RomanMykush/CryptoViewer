@@ -7,13 +7,15 @@
     <SolidColorBrush x:Key="color1" Color="#627eeb"/>
     <SolidColorBrush x:Key="color2" Color="#f39d22"/>
     <SolidColorBrush x:Key="color3" Color="#0bb6ee"/>
-    <SolidColorBrush x:Key="color4" Color="#FB539B"/>
+    <SolidColorBrush x:Key="color4" Color="#da5e66"/>
     <!-- Font colors -->
     <SolidColorBrush x:Key="textColor1" Color="#fcfefd"/>
     <SolidColorBrush x:Key="textColor2" Color="#b3c9d7"/>
     <!-- Highlight colors -->
     <Color x:Key="highlightColor1">#693dd8</Color>
     <Color x:Key="highlightColor2">#665bf5</Color>
+    <Color x:Key="highlightSelectedColor1">#665bf5</Color>
+    <Color x:Key="highlightSelectedColor2">#3d8efa</Color>
     <!-- Color of change -->
     <SolidColorBrush x:Key="positiveChangeColor" Color="#04d39f"/>
     <SolidColorBrush x:Key="negativeChangeColor" Color="#da5e66"/>
