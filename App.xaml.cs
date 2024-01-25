@@ -66,7 +66,7 @@ public partial class App : Application
 
                 services.AddSingleton<MainViewModel>();
                 services.AddScoped<CoinDetailsViewModel>();
-                services.AddScoped<HomeViewModel>();
+                services.AddTransient<HomeViewModel>();
                 services.AddScoped<SettingsViewModel>();
 
                 services.AddSingleton(s => new MainWindow()

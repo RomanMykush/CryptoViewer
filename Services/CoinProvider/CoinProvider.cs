@@ -20,7 +20,7 @@ public class CoinProvider : ICoinProvider
     public async Task<IEnumerable<SimpleCoinDto>> SearchCoin(string query)
     {
         var response = await _httpClient.GetAsync($"search?query={query}");
-        var jsonRes = await response.Content.ReadAsStringAsync();
+        string jsonRes = await response.Content.ReadAsStringAsync();
 
         var jArray = JObject.Parse(jsonRes)["coins"] as JArray;
 
@@ -35,19 +35,25 @@ public class CoinProvider : ICoinProvider
         return result;
     }
 
-    public async Task<IEnumerable<CoinDto>> GetCoins(string referenceCurrency, ICollection<string>? ids = null)
+    public async Task<IEnumerable<CoinDto>> GetCoins(string referenceCurrency, ICollection<string> ids)
     {
-        string requestQuery;
-        if (ids != null)
-        {
-            string idsQuery = string.Join(",", ids);
-            requestQuery = $"coins/markets?vs_currency={referenceCurrency}&ids={idsQuery}&per_page={ids.Count}&sparkline=false&price_change_percentage=24h,7d,30d,1y";
-        }
-        else
-            requestQuery = $"coins/markets?vs_currency={referenceCurrency}&per_page=10&sparkline=false&price_change_percentage=24h,7d,30d,1y";
+        string idsQuery = string.Join(",", ids);
+        string requestQuery = $"coins/markets?vs_currency={referenceCurrency}&ids={idsQuery}&per_page={ids.Count}&sparkline=false&price_change_percentage=24h,7d,30d,1y";
 
+        return await FetchCoins(requestQuery);
+    }
+
+    public async Task<IEnumerable<CoinDto>> GetTopNCoins(string referenceCurrency, int num)
+    {
+        string requestQuery = $"coins/markets?vs_currency={referenceCurrency}&per_page={num}&sparkline=false&price_change_percentage=24h,7d,30d,1y";
+
+        return await FetchCoins(requestQuery);
+    }
+
+    private async Task<IEnumerable<CoinDto>> FetchCoins(string requestQuery)
+    {
         var response = await _httpClient.GetAsync(requestQuery);
-        var jsonRes = await response.Content.ReadAsStringAsync();
+        string jsonRes = await response.Content.ReadAsStringAsync();
 
         var result = JsonConvert.DeserializeObject<CoinDto[]>(jsonRes);
 

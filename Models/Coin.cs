@@ -18,7 +18,7 @@ public class Coin : IExpirable
     public DateTime ExpirationDate { get; }
     public Coin()
     {
-        ExpirationDate = DateTime.UtcNow + TimeSpan.FromMinutes(1);
+        ExpirationDate = DateTime.UtcNow + TimeSpan.FromMinutes(5);
     }
 
     public bool IsExpired()

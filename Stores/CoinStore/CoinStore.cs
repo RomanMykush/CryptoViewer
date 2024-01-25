@@ -9,6 +9,8 @@ public class CoinStore
     private Dictionary<string, Coin> CoinsById = [];
     private Dictionary<string, Coin> CoinsBySymbol = [];
 
+    public TopCoinList TopCoins { get; private set; } = new TopCoinList() { CoinsIds = [] };
+
     public CoinStore()
     {
         WeakReferenceMessenger.Default.Register<CoinStore, CurrentRefCurrencyChangedMessage>(this, (r, m) => Ckear());
@@ -43,9 +45,15 @@ public class CoinStore
             CoinsBySymbol.Remove(coin.Symbol);
     }
 
+    public void SetTopCoins(IEnumerable<string> ids)
+    {
+        TopCoins = new TopCoinList() { CoinsIds = ids };
+    }
+
     public void Ckear()
     {
         CoinsById.Clear();
         CoinsBySymbol.Clear();
+        TopCoins = new TopCoinList() { CoinsIds = [] };
     }
 }

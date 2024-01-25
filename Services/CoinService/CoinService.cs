@@ -22,6 +22,36 @@ public class CoinService : ICoinService
         _mapper = mapper;
     }
 
+    public async Task<IEnumerable<Coin>> GetTopNCoins(int num)
+    {
+        // Count check
+        if (_coinStore.TopCoins.Count < num)
+            return await FetchTopNCoins(num);
+
+        // Check if is fresh
+        if (_coinStore.TopCoins.IsExpired())
+            return await FetchTopNCoins(num);
+
+        IEnumerable<Coin?> coins = _coinStore.TopCoins.CoinsIds.Select(id => _coinStore.GetCoinById(id));
+
+        // Check if data exist
+        if (coins == null || coins.Any(c => c == null))
+            return await FetchCoins(_coinStore.TopCoins.CoinsIds);
+
+        return coins!;
+    }
+
+    private async Task<IEnumerable<Coin>> FetchTopNCoins(int num)
+    {
+        var coinDtos = await _coinProvider.GetTopNCoins(_referenceCurrencyStore.CurrentRefCurrency, num);
+        var coins = _mapper.Map<List<Coin>>(coinDtos);
+
+        coins.ForEach(c => _coinStore.AddOrUpdateCoin(c));
+        _coinStore.SetTopCoins(coins.Select(c => c.Id));
+
+        return coins;
+    }
+
     public async Task<IEnumerable<Coin>> GetCoins(IEnumerable<string> ids)
     {
         IEnumerable<Coin?> coins = ids.Select(id => _coinStore.GetCoinById(id));
